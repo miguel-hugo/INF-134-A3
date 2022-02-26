@@ -1,4 +1,4 @@
-import {SVG, Svg, G, Container, Rect, Text} from '@svgdotjs/svg.js'
+import {SVG, Svg, G, Container, Rect, Text, Box, Circle, Line} from '@svgdotjs/svg.js'
 
 
 enum States{
@@ -41,9 +41,10 @@ class Window implements IWidgetStateEvent {
     }
 
     private registerEvents(body: Svg){
-        /*SVG().on(window, 'keyup', (event)=>{
+        SVG(window).on('keyup', (event)=>{
             this.raise(InputType.KeyPress, event)
-        });*/
+        }, window);
+        
         body.mousedown((event: string)=>{
             this.raise(InputType.MouseDown, event);
         })
@@ -71,7 +72,7 @@ class Window implements IWidgetStateEvent {
         this._handlers.push(handler);
     }
 
-    raise(inputType:InputType, event: string) {
+    raise(inputType:InputType, event: any) {
         this._handlers.slice(0).forEach(h => h(inputType, event));
     }
 }
@@ -141,8 +142,10 @@ abstract class Widget extends WidgetState{
     }
 
     protected registerEvent(obj:any): void{
+        // click and dblclick can be used for debugging, but detecting
+        // clicks should occur at the level of widget using state transition
         obj.click((event: string)=>{
-            //this.transition('CLICK', event);
+            //this.transition(InputType.MouseUp, event);
             //console.log("clicked")
         });
         obj.dblclick((event: string)=>{
@@ -192,4 +195,4 @@ abstract class Widget extends WidgetState{
 // local
 export {Window, Widget, WidgetState, IWidgetStateEvent, States, InputType }
 // from svg.js
-export {SVG, Svg, G, Rect, Container, Text}
+export {SVG, Svg, G, Rect, Container, Text, Box, Circle, Line}
